@@ -33,7 +33,7 @@ services:
     depends_on:
       - node-service
     volumes:
-      - ./nginx.conf:/nginx/nginx.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - backend
 

@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: books
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+
+  node-service:
+    build: ./api
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: books
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - node-service
+    volumes:
+      - ./nginx.conf:/nginx/nginx.conf
+    networks:
+      - backend
+
+volumes:
+  db_data:
+
+networks:
+  backend:
